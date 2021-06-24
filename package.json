@@ -1,5 +1,5 @@
 {
-  "name": "calendar-app",
+  "name": "calendar-scheduler-app",
   "version": "1.0.0",
   "description": "A simple scheduler for classes",
   "main": "index.js",
