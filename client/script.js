@@ -26,6 +26,8 @@ function initButtons() {
         nav--;
         load();
     });
+    
+    document.getElementById('addMoreButton').addEventListener('click', () => addMoreModal(clicked));
 
     document.getElementById('saveButton').addEventListener('click', saveEvent);
     document.getElementById('cancelButton').addEventListener('click', closeModal);
@@ -88,37 +90,48 @@ function load() {
         else {
             daySquare.classList.add('padding');
         }
-
+        
         calendar.appendChild(daySquare);
     }
 }
 
+function addMoreModal(date){
+    newEventModal.style.display = 'none';
+    deleteEventModal.style.display = 'none';
+    backDrop.style.display = 'none';
+    schedule_facultyName.value = '';
+    
+    newEventModal.style.display = 'block';
+    document.getElementById('schedule_date').value = date;
+    backDrop.style.display = 'block';
+}
+
 function openModal(date) {
     clicked = date;
+        const eventForDay = events.find(e => e.schedule_date === clicked);
 
-    const eventForDay = events.find(e => e.schedule_date === clicked);
-
-    if (eventForDay) {
-        document.getElementById('eventText').innerText = eventForDay.schedule_facultyName + " | " + eventForDay.schedule_date + " | " + eventForDay.schedule_batch + " | " + eventForDay.schedule_start + " | " + eventForDay.schedule_end ;
-        let del = document.createElement('button');
-        del.id = "deleteButton";
-        del.innerText = "X";
-        let edit = document.createElement('button');
-        edit.id = "editButton";
-        let inpt = document.createElement('input');
-        inpt.type = 'image';
-        inpt.style.height = "15px";
-        inpt.style.width = "20px";
-        inpt.src = "../Assets/edit-button.png";
-        edit.appendChild(inpt);
-        document.getElementById('eventText').appendChild(edit);
-        document.getElementById('eventText').appendChild(del);
-        document.getElementById('deleteButton').addEventListener('click', deleteEvent);
-        deleteEventModal.style.display = 'block';
-    } else {
-        newEventModal.style.display = 'block';
-        document.getElementById('schedule_date').value = clicked;
-    }
+        if (eventForDay) {
+            document.getElementById('eventText').innerText = eventForDay.schedule_facultyName + " | " + eventForDay.schedule_date + " | " + eventForDay.schedule_batch + " | " + eventForDay.schedule_start + " | " + eventForDay.schedule_end ;
+            let del = document.createElement('button');
+            del.id = "deleteButton";
+            del.innerText = "X";
+            let edit = document.createElement('button');
+            edit.id = "editButton";
+            let inpt = document.createElement('input');
+            inpt.type = 'image';
+            inpt.style.height = "15px";
+            inpt.style.width = "20px";
+            inpt.src = "../Assets/edit-button.png";
+            edit.appendChild(inpt);
+            document.getElementById('eventText').appendChild(edit);
+            document.getElementById('eventText').appendChild(del);
+            document.getElementById('deleteButton').addEventListener('click', deleteEvent);
+            deleteEventModal.style.display = 'block';
+        } else {
+            newEventModal.style.display = 'block';
+            document.getElementById('schedule_date').value = clicked;
+        }
+    
 
     backDrop.style.display = 'block';
 }
