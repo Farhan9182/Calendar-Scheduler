@@ -4,11 +4,7 @@ const calendar = document.getElementById('calendar');
 const newEventModal = document.getElementById('newEventModal');
 const deleteEventModal = document.getElementById('deleteEventModal');
 const backDrop = document.getElementById('modalBackDrop');
-const schedule_facultyName = document.getElementById('schedule_facultyName');
-const schedule_batch = document.getElementById('schedule_batch');
-const schedule_date = document.getElementById('schedule_date');
-const schedule_start = document.getElementById('schedule_start');
-const schedule_end = document.getElementById('schedule_end');
+
 
 
 let nav = 0; //to check navigation from current date
@@ -33,7 +29,7 @@ function initButtons() {
 
     document.getElementById('saveButton').addEventListener('click', saveEvent);
     document.getElementById('cancelButton').addEventListener('click', closeModal);
-    document.getElementById('deleteButton').addEventListener('click', deleteEvent);
+    
     document.getElementById('closeButton').addEventListener('click', closeModal);
 
 }
@@ -73,7 +69,7 @@ function load() {
 
         if (i > paddingDays) {
             daySquare.innerText = i - paddingDays;
-            const eventForDay = events.find(e => e.date === dayString);
+            const eventForDay = events.find(e => e.schedule_date === dayString);
 
             if (i - paddingDays === day && nav === 0) {
                 daySquare.id = 'currentDay';
@@ -82,7 +78,7 @@ function load() {
             if (eventForDay) {
                 const eventDiv = document.createElement('div');
                 eventDiv.classList.add('event');
-                eventDiv.innerText = eventForDay.title;
+                eventDiv.innerText = eventForDay.schedule_facultyName;
                 daySquare.appendChild(eventDiv);
             }
 
@@ -100,13 +96,28 @@ function load() {
 function openModal(date) {
     clicked = date;
 
-    const eventForDay = events.find(e => e.date === clicked);
+    const eventForDay = events.find(e => e.schedule_date === clicked);
 
     if (eventForDay) {
-        document.getElementById('eventText').innerText = eventForDay.title;
+        document.getElementById('eventText').innerText = eventForDay.schedule_facultyName + " | " + eventForDay.schedule_date + " | " + eventForDay.schedule_batch + " | " + eventForDay.schedule_start + " | " + eventForDay.schedule_end ;
+        let del = document.createElement('button');
+        del.id = "deleteButton";
+        del.innerText = "X";
+        let edit = document.createElement('button');
+        edit.id = "editButton";
+        let inpt = document.createElement('input');
+        inpt.type = 'image';
+        inpt.style.height = "15px";
+        inpt.style.width = "20px";
+        inpt.src = "../Assets/edit-button.png";
+        edit.appendChild(inpt);
+        document.getElementById('eventText').appendChild(edit);
+        document.getElementById('eventText').appendChild(del);
+        document.getElementById('deleteButton').addEventListener('click', deleteEvent);
         deleteEventModal.style.display = 'block';
     } else {
         newEventModal.style.display = 'block';
+        document.getElementById('schedule_date').value = clicked;
     }
 
     backDrop.style.display = 'block';
@@ -123,18 +134,33 @@ function closeModal() {
 }
 
 function saveEvent() {
-    if (eventTitleInput.value) {
-        eventTitleInput.classList.remove('error');
+    const schedule_facultyName = document.getElementById('schedule_facultyName');
+    const schedule_batch = document.getElementById('schedule_batch');
+    const schedule_date = document.getElementById('schedule_date');
+    const schedule_start = document.getElementById('schedule_start');
+    const schedule_end = document.getElementById('schedule_end');
 
+    if (schedule_facultyName.value && schedule_batch.value && schedule_date.value && schedule_start.value && schedule_end.value) {
+        console.log(schedule_facultyName.value);
+        console.log(schedule_batch.value);
+        console.log(schedule_start.value);
         events.push({
-            date: clicked,
-            title: eventTitleInput.value,
+            schedule_facultyName : schedule_facultyName.value,
+            schedule_date : schedule_date.value,
+            schedule_batch : schedule_batch.value,
+            schedule_end : schedule_end.value,
+            schedule_start : schedule_start.value
         });
 
         localStorage.setItem('events', JSON.stringify(events));
+        schedule_facultyName.value = "";
+        schedule_batch.value = "";
+        schedule_date.value = "";
+        schedule_start.value = "";
+        schedule_end.value = "";
         closeModal();
     } else {
-        eventTitleInput.classList.add('error');
+        alert("Event not saved ! Please fill out all the fields.")
     }
 }
 
