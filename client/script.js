@@ -2,7 +2,7 @@
 document.addEventListener('DOMContentLoaded', function () {
     fetch('http://localhost:5000/getAll')
     .then(response => response.json())
-    .then(data => loadHTMLTable(data['data']));
+    .then(data => console.log(data['data']));
 })
 
 
@@ -158,21 +158,31 @@ function closeModal() {
 function saveEvent() {
     const schedule_facultyName = document.getElementById('schedule_facultyName');
     const schedule_batch = document.getElementById('schedule_batch');
-    const schedule_date = document.getElementById('schedule_date');
+    const schedule_date_local_format = document.getElementById('schedule_date').value;
     const schedule_start = document.getElementById('schedule_start');
     const schedule_end = document.getElementById('schedule_end');
+    let temp_schedule_date = new Date(schedule_date_local_format);
+    const schedule_date = new Date(temp_schedule_date.getTime() - (temp_schedule_date.getTimezoneOffset() * 60000 ))
+                    .toISOString()
+                    .split("T")[0];
 
-    if (schedule_facultyName.value && schedule_batch.value && schedule_date.value && schedule_start.value && schedule_end.value) {
-        console.log(schedule_facultyName.value);
-        console.log(schedule_batch.value);
-        console.log(schedule_start.value);
-        events.push({
+    console.log(schedule_date);
+    if (schedule_facultyName.value && schedule_batch.value && schedule_date && schedule_start.value && schedule_end.value) {
+
+        fetch('http://localhost:5000/insert', {
+        headers: {
+            'Content-type': 'application/json'
+        },
+        method: 'POST',
+        body: JSON.stringify({ 
             schedule_facultyName : schedule_facultyName.value,
-            schedule_date : schedule_date.value,
+            schedule_date : schedule_date,
             schedule_batch : schedule_batch.value,
             schedule_end : schedule_end.value,
-            schedule_start : schedule_start.value
-        });
+            schedule_start : schedule_start.value})
+    })
+    .then(response => response.json())
+    .then(data => console.log(data['data']));
 
         localStorage.setItem('events', JSON.stringify(events));
         schedule_facultyName.value = "";

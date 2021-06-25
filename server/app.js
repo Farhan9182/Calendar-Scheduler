@@ -13,12 +13,34 @@ app.use(express.json());
 app.use(express.urlencoded({ extended : false }));
 
 app.post('/insert', (request,response) => {
+    
+    const schedule_facultyName = request.body.schedule_facultyName;
+    const schedule_date= request.body.schedule_date;
+    const schedule_batch= request.body.schedule_batch;
+    const schedule_end= request.body.schedule_end;
+    const schedule_start= request.body.schedule_start;
+    const db = dbService.getDbServiceInstance();
+    
+    const result = db.insertNewRow(
+        schedule_facultyName
+        ,schedule_date
+        ,schedule_batch
+        ,schedule_end
+        ,schedule_start);
 
+    result
+    .then(data => response.json({ data: data}))
+    .catch(err => console.log(err));
 });
 
 app.get('/getAll', (request,response) => {
-    console.log('test');
+    const db = dbService.getDbServiceInstance();
     
+    const result = db.getAllData();
+    
+    result
+    .then(data => response.json({data : data}))
+    .catch(err => console.log(err));
 })
 
 
