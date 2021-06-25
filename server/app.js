@@ -43,5 +43,17 @@ app.get('/getAll', (request,response) => {
     .catch(err => console.log(err));
 })
 
+app.get('/search/:details', (request, response) => {
+    let obj = JSON.parse(request.params.details);
+    console.log(obj.month);
+    console.log(obj.year);
+    const db = dbService.getDbServiceInstance();
+
+    const result = db.searchByMonthYear(obj.month, obj.year);
+    
+    result
+    .then(data => response.json({data : data}))
+    .catch(err => console.log(err));
+})
 
 app.listen(process.env.PORT, () => console.log('App is running'));
