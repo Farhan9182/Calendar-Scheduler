@@ -4,6 +4,7 @@
   "description": "A simple scheduler for classes",
   "main": "app.js",
   "scripts": {
+    "dev": "npx nodemon server/app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -17,6 +18,7 @@
   },
   "homepage": "https://github.com/Farhan9182/Calendar-Scheduler#readme",
   "dependencies": {
+    "cors": "^2.8.5",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "mysql": "^2.18.1"

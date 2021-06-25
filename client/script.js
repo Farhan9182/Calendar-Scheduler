@@ -1,3 +1,12 @@
+//BACKEND SCRIPT-----------------------------------------------------------------
+document.addEventListener('DOMContentLoaded', function () {
+    fetch('http://localhost:5000/getAll')
+    .then(response => response.json())
+    .then(data => loadHTMLTable(data['data']));
+})
+
+
+//FRONTEND SCRIPT-----------------------------------------------------------------
 const weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
 const calendar = document.getElementById('calendar');
