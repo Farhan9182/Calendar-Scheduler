@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const cors = require('cors');
 const dotenv = require('dotenv');
-const { request, response } = require('express');
+
 
 dotenv.config();
 
@@ -60,6 +60,17 @@ app.delete('/delete/:id', (request, response) => {
     const db = dbService.getDbServiceInstance();
 
     const result = db.deleteRowById(id);
+    
+    result
+    .then(data => response.json({success : data}))
+    .catch(err => console.log(err));
+});
+
+app.patch('/update', (request, response) => {
+    const { id, schedule_facultyName, schedule_date, schedule_batch, schedule_end, schedule_start } = request.body;
+    const db = dbService.getDbServiceInstance();
+    
+    const result = db.updateById(id, schedule_facultyName, schedule_batch, schedule_date, schedule_start, schedule_end);
     
     result
     .then(data => response.json({success : data}))

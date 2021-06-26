@@ -105,6 +105,25 @@ class DbService {
         }
     }
 
+    async updateById(id, facultyName, batch, date, start, end) {
+        try {
+            id = parseInt(id, 10); 
+            const response = await new Promise((resolve, reject) => {
+                const query = "UPDATE schedule SET faculty_name = ? , batch = ? , date = ? , start = ? , end = ? WHERE id = ?";
+    
+                connection.query(query, [facultyName, batch, date, start, end, id] , (err, result) => {
+                    if (err) reject(new Error(err.message));
+                    resolve(result.affectedRows);
+                })
+            });
+    
+            return response === 1 ? true : false;
+        } catch (error) {
+            console.log(error);
+            return false;
+        }
+    }
+
 }
 
 module.exports = DbService;

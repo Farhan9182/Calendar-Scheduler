@@ -91,7 +91,7 @@ body {
     background-color: #FFFCFF !important;
     box-shadow: none !important;
   }
-  #newEventModal, #deleteEventModal {
+  #newEventModal, #deleteEventModal, #updateEventModal {
     display: none;
     z-index: 20;
     padding: 25px;
@@ -118,7 +118,7 @@ body {
   #eventTitleInput.error {
     border: 2px solid red;
   }
-  #cancelButton{
+  #cancelButton, #cancelUpdateButton{
     background-color: #d36c6c;
     
   }
@@ -141,7 +141,7 @@ body {
     background-color: #92a1d1;
     
   }
-  #addMoreButton {
+  #addMoreButton, #updateButton {
       background-color: rgba(0,0,0,0.8);
   }
   #eventText {

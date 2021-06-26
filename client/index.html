@@ -35,18 +35,31 @@
     <div id="newEventModal">
       <h2>New Event</h2>
 
-      <input id="schedule_facultyName" placeholder="Faculty Name" />
-      <input id="schedule_batch" placeholder="Batch" />
-      <input id="schedule_date" placeholder="Date" />
-      <input id="schedule_start" placeholder="Start Time" />
-      <input id="schedule_end" placeholder="End Time" />
+      <input type="text" id="schedule_facultyName" placeholder="Faculty Name" />
+      <input type="text" id="schedule_batch" placeholder="Batch" />
+      <input type="date" id="schedule_date" placeholder="Date" />
+      <input type="time" id="schedule_start" placeholder="Start Time" />
+      <input type="time" id="schedule_end" placeholder="End Time" />
 
       <button id="saveButton">Save</button>
       <button id="cancelButton">Cancel</button>
     </div>
 
+    <div id="updateEventModal">
+      <h2>Update Event</h2>
+
+      <input type="text" id="update_schedule_facultyName" placeholder="Faculty Name" />
+      <input type="text" id="update_schedule_batch" placeholder="Batch" />
+      <input type="date" id="update_schedule_date" placeholder="Date" />
+      <input type="time" id="update_schedule_start" placeholder="Start Time" />
+      <input type="time" id="update_schedule_end" placeholder="End Time" />
+
+      <button id="updateButton">Update</button>
+      <button id="cancelUpdateButton">Cancel</button>
+    </div>
+
     <div id="deleteEventModal">
-      <h2>Event</h2>
+      <h2>Events</h2>
 
       <div id="eventsContainer"></div>
       <button id="addMoreButton">Add More</button>
