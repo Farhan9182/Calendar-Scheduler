@@ -2,7 +2,8 @@ body {
     display: flex;
     margin-top: 50px;
     justify-content: center;
-    background-color: #FFFCFF;
+    background-color: whitesmoke;
+    
   }
   button {
     width: 75px;
@@ -26,7 +27,22 @@ body {
   #header button {
     background-color:#92a1d1;
   }
+  #filterDiv{
+    top: 25px;
+    float: right;
+    justify-content: center;
+    justify-items: center;
+  }
+  #filterDiv > button{
+    background-color: lightslategrey;
+  }
+  #filterDiv > input{
+    
+  }
   #container {
+    border:lightskyblue solid 0.5rem;
+    padding: 3px;
+    border-radius: 5px;
     max-width: 770px;
     width: 100%;
   }

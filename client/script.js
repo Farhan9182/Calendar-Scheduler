@@ -148,8 +148,7 @@ async function validate(faculty_name, date, start, end) {
 
 function check(data, start, end) {
     for (let i = 0; i < data.length; i++) {
-        console.log(data[i].start);
-        // console.log(start);
+        
         if (data[i].start == start) {
             return false;
         }
@@ -362,7 +361,7 @@ function deleteEvent(id, date) {
 }
 
 function editEvent(id) {
-    console.log("called");
+    
     const schedule_facultyName = document.getElementById('update_schedule_facultyName');
     const schedule_batch = document.getElementById('update_schedule_batch');
     const scheduleDate = document.getElementById('update_schedule_date');
