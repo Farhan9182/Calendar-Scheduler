@@ -55,6 +55,18 @@ app.get('/search/:details', (request, response) => {
     .catch(err => console.log(err));
 })
 
+app.get('/validate/:details', (request, response) => {
+    let obj = JSON.parse(request.params.details);
+    
+    const db = dbService.getDbServiceInstance();
+
+    const result = db.validateEntry(obj.faculty_name, obj.date);
+    
+    result
+    .then(data => response.json({data : data}))
+    .catch(err => console.log(err));
+})
+
 app.delete('/delete/:id', (request, response) => {
     const id = request.params.id;
     const db = dbService.getDbServiceInstance();

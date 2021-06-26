@@ -72,9 +72,26 @@ class DbService {
     async searchByMonthYear(month, year) {
         try {
             const response = await new Promise((resolve, reject) => {
-                const query = "SELECT * FROM schedule WHERE MONTH(date) = ? AND YEAR(date) = ? ;";
+                const query = "SELECT * FROM schedule WHERE MONTH(date) = ? AND YEAR(date) = ? ORDER BY faculty_name, start ASC;";
 
                 connection.query(query, [month, year], (err, results) => {
+                    if (err) reject(new Error(err.message));
+                    resolve(results);
+                })
+            });
+
+            return response;
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    async validateEntry(faculty_name,date) {
+        try {
+            const response = await new Promise((resolve, reject) => {
+                const query = "SELECT * FROM schedule WHERE faculty_name = ? AND date = ? ORDER BY start ASC;";
+
+                connection.query(query, [faculty_name, date], (err, results) => {
                     if (err) reject(new Error(err.message));
                     resolve(results);
                 })

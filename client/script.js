@@ -99,7 +99,7 @@ function populateEvents(eventRows, month, year, paddingDays, daysInMonth, day) {
         const dayString = `${month + 1}/${i - paddingDays}/${year}`;
         let eventForDay = false;
         if (i > paddingDays) {
-            
+
             daySquare.innerText = i - paddingDays;
             daySquare.setAttribute('day', i - paddingDays);
             eventRows.forEach(element => {
@@ -132,6 +132,48 @@ function populateEvents(eventRows, month, year, paddingDays, daysInMonth, day) {
     }
 }
 
+async function validate(faculty_name, date, start, end) {
+
+    let details = {
+        faculty_name: faculty_name,
+        date: date
+    }
+    let sendData = JSON.stringify(details);
+
+    const response = await fetch('http://localhost:5000/validate/' + sendData);
+    const data = await response.json();
+    let bool = check(data['data'], start, end);
+    return bool;
+}
+
+function check(data, start, end) {
+    for (let i = 0; i < data.length; i++) {
+        console.log(data[i].start);
+        // console.log(start);
+        if (data[i].start == start) {
+            return false;
+        }
+        if (data[i].start > start) {
+            if (i - 1 < 0) {
+                if (end <= data[i].start) {
+                    return true;
+                }
+                else {
+                    return false;
+                }
+            }
+            else if (data[i - 1].end <= start && end <= data[i].start) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+
+    }
+    return true;
+}
+
 function editModal(id, faculty_name, batch, date, start, end) {
     newEventModal.style.display = 'none';
     deleteEventModal.style.display = 'none';
@@ -140,13 +182,13 @@ function editModal(id, faculty_name, batch, date, start, end) {
 
     let dateParts = date.split('/');
     for (let index = 0; index < dateParts.length; index++) {
-        if(dateParts[index].length == 1){
-            dateParts[index] = "0"+dateParts[index];
+        if (dateParts[index].length == 1) {
+            dateParts[index] = "0" + dateParts[index];
         }
-        
+
     }
-    let finalDate = dateParts[2] + "-" + dateParts[1] + "-" + dateParts [0];
-    
+    let finalDate = dateParts[2] + "-" + dateParts[1] + "-" + dateParts[0];
+
     document.getElementById('update_schedule_facultyName').value = faculty_name;
     document.getElementById('update_schedule_batch').value = batch;
     document.getElementById('update_schedule_date').value = finalDate;
@@ -154,7 +196,7 @@ function editModal(id, faculty_name, batch, date, start, end) {
     document.getElementById('update_schedule_end').value = end;
 
     document.getElementById('updateButton').onclick = () => editEvent(id);
-    
+
     editEventModal.style.display = 'block';
     backDrop.style.display = 'block';
 
@@ -165,25 +207,32 @@ function addMoreModal(date) {
     deleteEventModal.style.display = 'none';
     backDrop.style.display = 'none';
 
+    let dateParts = date.split('/');
+    for (let index = 0; index < dateParts.length; index++) {
+        if (dateParts[index].length == 1) {
+            dateParts[index] = "0" + dateParts[index];
+        }
+
+    }
+    let finalDate = dateParts[2] + "-" + dateParts[0] + "-" + dateParts[1];
+    document.getElementById('schedule_date').value = finalDate;
     newEventModal.style.display = 'block';
-    document.getElementById('schedule_date').value = date;
     backDrop.style.display = 'block';
 }
 
 function openModal(date, eventRows, eventForDay) {
     clicked = date;
-    
+
     if (eventForDay) {
 
         eventRows.forEach(element => {
             var dateObj = new Date(element.date);
             dateObj = dateObj.toLocaleDateString();
-            
+
             if (date == dateObj) {
                 let dateParts = dateObj.split('/');
-                let finalDate = dateParts[1] + "/" + dateParts[0] + "/" + dateParts [2];
-                
-                console.log(finalDate);
+                let finalDate = dateParts[1] + "/" + dateParts[0] + "/" + dateParts[2];
+
                 let div = document.createElement('div');
                 div.id = "eventText";
                 div.innerText = element.faculty_name + " | " + element.batch + " | " + finalDate + " | " + element.start + " | " + element.end;
@@ -211,17 +260,17 @@ function openModal(date, eventRows, eventForDay) {
 
     } else {
         newEventModal.style.display = 'block';
-        
+
         let dateParts = date.split('/');
         for (let index = 0; index < dateParts.length; index++) {
-            if(dateParts[index].length == 1){
-                dateParts[index] = "0"+dateParts[index];
+            if (dateParts[index].length == 1) {
+                dateParts[index] = "0" + dateParts[index];
             }
-            
+
         }
-        let finalDate = dateParts[2] + "-" + dateParts[0] + "-" + dateParts [1];
+        let finalDate = dateParts[2] + "-" + dateParts[0] + "-" + dateParts[1];
         document.getElementById('schedule_date').value = finalDate;
-        document.getElementById('schedule_date').setAttribute('disabled','true');
+        document.getElementById('schedule_date').setAttribute('disabled', 'true');
     }
 
 
@@ -234,7 +283,7 @@ function closeModal() {
     deleteEventModal.style.display = 'none';
     editEventModal.style.display = 'none';
     backDrop.style.display = 'none';
-    
+
     document.getElementById('eventsContainer').textContent = '';
     clicked = null;
     load();
@@ -252,35 +301,43 @@ function saveEvent() {
         .toISOString()
         .split("T")[0];
 
-    console.log(schedule_date);
-    if (schedule_facultyName.value && schedule_batch.value && schedule_date && schedule_start.value && schedule_end.value) {
 
-        fetch('http://localhost:5000/insert', {
-            headers: {
-                'Content-type': 'application/json'
-            },
-            method: 'POST',
-            body: JSON.stringify({
-                schedule_facultyName: schedule_facultyName.value,
-                schedule_date: schedule_date,
-                schedule_batch: schedule_batch.value,
-                schedule_end: schedule_end.value,
-                schedule_start: schedule_start.value
-            })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.data) {
-                schedule_facultyName.value = "";
-                schedule_batch.value = "";
-                scheduleDate.value = "";
-                schedule_start.value = "";
-                schedule_end.value = "";
-                closeModal();
+    if (schedule_facultyName.value && schedule_batch.value && schedule_date && schedule_start.value && schedule_end.value) {
+        let validation = validate(schedule_facultyName.value, schedule_date, schedule_start.value + ":00", schedule_end.value + ":00");
+        validation.then((bool) => {
+            if (bool) {
+                fetch('http://localhost:5000/insert', {
+                    headers: {
+                        'Content-type': 'application/json'
+                    },
+                    method: 'POST',
+                    body: JSON.stringify({
+                        schedule_facultyName: schedule_facultyName.value,
+                        schedule_date: schedule_date,
+                        schedule_batch: schedule_batch.value,
+                        schedule_end: schedule_end.value,
+                        schedule_start: schedule_start.value
+                    })
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.data) {
+                            schedule_facultyName.value = "";
+                            schedule_batch.value = "";
+                            scheduleDate.value = "";
+                            schedule_start.value = "";
+                            schedule_end.value = "";
+                            closeModal();
+                        }
+                    });
+            }
+            else {
+                alert("This is an overlapping schedule !!! Please reconsider.")
             }
         });
 
-        
+
+
     } else {
         alert("Event not saved ! Please fill out all the fields.");
     }
@@ -318,36 +375,44 @@ function editEvent(id) {
         .split("T")[0];
 
     if (schedule_facultyName.value && schedule_batch.value && schedule_date && schedule_start.value && schedule_end.value) {
+        let validation = validate(schedule_facultyName.value, schedule_date, schedule_start.value + ":00", schedule_end.value + ":00");
+        validation.then((bool) => {
+            if (bool) {
+                fetch('http://localhost:5000/update', {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        id: id,
+                        schedule_facultyName: schedule_facultyName.value,
+                        schedule_date: schedule_date,
+                        schedule_batch: schedule_batch.value,
+                        schedule_end: schedule_end.value,
+                        schedule_start: schedule_start.value
+                    })
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            schedule_facultyName.value = "";
+                            schedule_batch.value = "";
+                            scheduleDate.value = "";
+                            schedule_start.value = "";
+                            schedule_end.value = "";
 
-        fetch('http://localhost:5000/update', {
-            method: 'PATCH',
-            headers: {
-                'Content-type': 'application/json'
-            },
-            body: JSON.stringify({
-                id : id,
-                schedule_facultyName: schedule_facultyName.value,
-                schedule_date: schedule_date,
-                schedule_batch: schedule_batch.value,
-                schedule_end: schedule_end.value,
-                schedule_start: schedule_start.value
-            })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                schedule_facultyName.value = "";
-                schedule_batch.value = "";
-                scheduleDate.value = "";
-                schedule_start.value = "";
-                schedule_end.value = "";
-                
-                closeModal();
+                            closeModal();
+                        }
+                    });
+            }
+            else {
+                alert("This is an overlapping schedule !!! Please reconsider.")
             }
         });
+
     }
     else {
-        alert("Event not saved ! Please fill out all the fields.");
-    }
+                alert("Event not saved ! Please fill out all the fields.");
+            }
 }
 

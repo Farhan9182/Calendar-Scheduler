@@ -139,6 +139,7 @@ body {
   
   #saveButton, #closeButton {
     background-color: #92a1d1;
+    margin-left: auto;
     
   }
   #addMoreButton, #updateButton {
