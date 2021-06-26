@@ -45,8 +45,7 @@ app.get('/getAll', (request,response) => {
 
 app.get('/search/:details', (request, response) => {
     let obj = JSON.parse(request.params.details);
-    console.log(obj.month);
-    console.log(obj.year);
+    
     const db = dbService.getDbServiceInstance();
 
     const result = db.searchByMonthYear(obj.month, obj.year);
@@ -55,5 +54,16 @@ app.get('/search/:details', (request, response) => {
     .then(data => response.json({data : data}))
     .catch(err => console.log(err));
 })
+
+app.delete('/delete/:id', (request, response) => {
+    const id = request.params.id;
+    const db = dbService.getDbServiceInstance();
+
+    const result = db.deleteRowById(id);
+    
+    result
+    .then(data => response.json({success : data}))
+    .catch(err => console.log(err));
+});
 
 app.listen(process.env.PORT, () => console.log('App is running'));

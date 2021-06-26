@@ -1,16 +1,16 @@
 
 //BACKEND SCRIPT-----------------------------------------------------------------
-document.addEventListener('DOMContentLoaded', () => start());
+document.addEventListener('DOMContentLoaded', load);
 
-function start() {
-    fetch('http://localhost:5000/getAll')
-        .then(response => response.json())
-        .then((data) => {
-            load(data['data']);
-            // let localDate = new Date(data['data'][0].date);
-            // console.log(localDate.toLocaleDateString());
-        });
-}
+// function start() {
+//     fetch('http://localhost:5000/getAll')
+//         .then(response => response.json())
+//         .then((data) => {
+//             load(data['data']);
+//             // let localDate = new Date(data['data'][0].date);
+//             // console.log(localDate.toLocaleDateString());
+//         });
+// }
 
 
 //FRONTEND SCRIPT-----------------------------------------------------------------
@@ -49,7 +49,7 @@ function initButtons() {
 
 }
 
-function load(tableRows) {
+function load() {
     const dt = new Date();
 
     if (nav !== 0) {
@@ -99,6 +99,7 @@ function populateEvents(eventRows,month,year,paddingDays,daysInMonth,day){
         let eventForDay = false;
         if (i > paddingDays) {
             daySquare.innerText = i - paddingDays;
+            daySquare.setAttribute('day',i - paddingDays);
             eventRows.forEach(element => {
                 var dateObj = new Date(element.date);
                 dateObj = dateObj.toLocaleDateString();
@@ -166,7 +167,9 @@ function openModal(date,eventRows,eventForDay) {
                 edit.appendChild(inpt);
                 div.appendChild(edit);
                 div.appendChild(del);
-                del.addEventListener('click', deleteEvent);
+                
+                del.addEventListener('click', () => deleteEvent(element.id,date,eventRows,eventForDay));
+                // edit.addEventListener('click', editEvent(element.id));
                 document.getElementById('eventsContainer').appendChild(div);
             }
         });
@@ -234,8 +237,20 @@ function saveEvent() {
     }
 }
 
-function deleteEvent() {
-    events = events.filter(e => e.date !== clicked);
-    localStorage.setItem('events', JSON.stringify(events));
-    closeModal();
+function deleteEvent(id,date,eventRows,eventForDay) {
+    fetch('http://localhost:5000/delete/' + id, {
+        method: 'DELETE'
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            closeModal();
+            setTimeout(() => {
+                let day = date.split('/')[1];
+                document.querySelector("[day='" + CSS.escape(day) + "']").click();
+            }, 500);
+            
+        }
+    });
+    
 }
