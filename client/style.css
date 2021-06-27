@@ -3,6 +3,9 @@ body {
     margin-top: 50px;
     justify-content: center;
     background-color: whitesmoke;
+    background-image: url("../Assets/background.png");
+    background-repeat: no-repeat;
+    background-size: 100vw 100vh;
     
   }
   button {
@@ -36,9 +39,7 @@ body {
   #filterDiv > button{
     background-color: lightslategrey;
   }
-  #filterDiv > input{
-    
-  }
+  
   #container {
     border:lightskyblue solid 0.5rem;
     padding: 3px;

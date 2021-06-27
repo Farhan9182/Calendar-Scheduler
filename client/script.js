@@ -1,4 +1,20 @@
-
+let filter = false;
+let filterName= "";
+document.getElementById('keyword').addEventListener('keypress',function(e){
+    if(e.key.localeCompare("Enter") == 0){
+        document.getElementById('filter').click();
+    }
+})
+document.getElementById('filter').addEventListener('click', () => {
+    filterName = document.getElementById('keyword').value;
+    if (filterName == "") {
+        filter = false;
+    }
+    else{
+        filter = true;
+    }
+    load();
+});
 //BACKEND SCRIPT-----------------------------------------------------------------
 document.addEventListener('DOMContentLoaded', load);
 
@@ -102,13 +118,29 @@ function populateEvents(eventRows, month, year, paddingDays, daysInMonth, day) {
 
             daySquare.innerText = i - paddingDays;
             daySquare.setAttribute('day', i - paddingDays);
-            eventRows.forEach(element => {
+            let str1 = filterName.toLocaleUpperCase().trim();
+            for(let i=0; i<eventRows.length; i++){
+                let element = eventRows[i];
+                let str2 = element.faculty_name.toLocaleUpperCase().trim();
                 var dateObj = new Date(element.date);
                 dateObj = dateObj.toLocaleDateString();
-                if (dayString == dateObj) {
-                    eventForDay = true;
+                console.log("Hello");
+                if (filter) {
+                    if (dayString == dateObj && str1.localeCompare(str2) == 0 ){
+                        
+                        eventForDay = true;
+                        break;
+                    } 
+                        
                 }
-            });
+                else{
+                    if (dayString == dateObj) {
+                        eventForDay = true;
+                        break;
+                    }
+                }
+                
+            }
 
             if (i - paddingDays === day && nav === 0) {
                 daySquare.id = 'currentDay';
@@ -224,36 +256,70 @@ function openModal(date, eventRows, eventForDay) {
 
     if (eventForDay) {
 
-        eventRows.forEach(element => {
-            var dateObj = new Date(element.date);
-            dateObj = dateObj.toLocaleDateString();
+        let str1 = filterName.toLocaleUpperCase().trim();
+            for(let i=0; i<eventRows.length; i++){
+                let element = eventRows[i];
+                let str2 = element.faculty_name.toLocaleUpperCase().trim();
+                var dateObj = new Date(element.date);
+                dateObj = dateObj.toLocaleDateString();
+                console.log("Hello");
 
-            if (date == dateObj) {
-                let dateParts = dateObj.split('/');
-                let finalDate = dateParts[1] + "/" + dateParts[0] + "/" + dateParts[2];
-
-                let div = document.createElement('div');
-                div.id = "eventText";
-                div.innerText = element.faculty_name + " | " + element.batch + " | " + finalDate + " | " + element.start + " | " + element.end;
-                let del = document.createElement('button');
-                del.id = "deleteButton";
-                del.innerText = "X";
-                let edit = document.createElement('button');
-                edit.id = "editButton";
-                let inpt = document.createElement('input');
-                inpt.type = 'image';
-                inpt.style.height = "15px";
-                inpt.style.width = "20px";
-                inpt.src = "../Assets/edit-button.png";
-                edit.appendChild(inpt);
-                div.appendChild(edit);
-                div.appendChild(del);
-
-                del.addEventListener('click', () => deleteEvent(element.id, date, eventRows, eventForDay));
-                edit.addEventListener('click', () => editModal(element.id, element.faculty_name, element.batch, finalDate, element.start, element.end));
-                document.getElementById('eventsContainer').appendChild(div);
-            }
-        });
+                if (filter) {
+                    if (date == dateObj && str1.localeCompare(str2) == 0 ){
+                        let dateParts = dateObj.split('/');
+                        let finalDate = dateParts[1] + "/" + dateParts[0] + "/" + dateParts[2];
+        
+                        let div = document.createElement('div');
+                        div.id = "eventText";
+                        div.innerText = element.faculty_name + " | " + element.batch + " | " + finalDate + " | " + element.start + " | " + element.end;
+                        let del = document.createElement('button');
+                        del.id = "deleteButton";
+                        del.innerText = "X";
+                        let edit = document.createElement('button');
+                        edit.id = "editButton";
+                        let inpt = document.createElement('input');
+                        inpt.type = 'image';
+                        inpt.style.height = "15px";
+                        inpt.style.width = "20px";
+                        inpt.src = "../Assets/edit-button.png";
+                        edit.appendChild(inpt);
+                        div.appendChild(edit);
+                        div.appendChild(del);
+        
+                        del.addEventListener('click', () => deleteEvent(element.id, date, eventRows, eventForDay));
+                        edit.addEventListener('click', () => editModal(element.id, element.faculty_name, element.batch, finalDate, element.start, element.end));
+                        document.getElementById('eventsContainer').appendChild(div);
+                    }
+                }
+                else{
+                    if (date == dateObj) {
+                        let dateParts = dateObj.split('/');
+                        let finalDate = dateParts[1] + "/" + dateParts[0] + "/" + dateParts[2];
+        
+                        let div = document.createElement('div');
+                        div.id = "eventText";
+                        div.innerText = element.faculty_name + " | " + element.batch + " | " + finalDate + " | " + element.start + " | " + element.end;
+                        let del = document.createElement('button');
+                        del.id = "deleteButton";
+                        del.innerText = "X";
+                        let edit = document.createElement('button');
+                        edit.id = "editButton";
+                        let inpt = document.createElement('input');
+                        inpt.type = 'image';
+                        inpt.style.height = "15px";
+                        inpt.style.width = "20px";
+                        inpt.src = "../Assets/edit-button.png";
+                        edit.appendChild(inpt);
+                        div.appendChild(edit);
+                        div.appendChild(del);
+        
+                        del.addEventListener('click', () => deleteEvent(element.id, date, eventRows, eventForDay));
+                        edit.addEventListener('click', () => editModal(element.id, element.faculty_name, element.batch, finalDate, element.start, element.end));
+                        document.getElementById('eventsContainer').appendChild(div);
+                    }
+                }
+            
+        }
 
         deleteEventModal.style.display = 'block';
 
