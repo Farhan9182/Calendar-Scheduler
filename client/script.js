@@ -15,18 +15,8 @@ document.getElementById('filter').addEventListener('click', () => {
     }
     load();
 });
-//BACKEND SCRIPT-----------------------------------------------------------------
-document.addEventListener('DOMContentLoaded', load);
 
-// function start() {
-//     fetch('http://localhost:5000/getAll')
-//         .then(response => response.json())
-//         .then((data) => {
-//             load(data['data']);
-//             // let localDate = new Date(data['data'][0].date);
-//             // console.log(localDate.toLocaleDateString());
-//         });
-// }
+document.addEventListener('DOMContentLoaded', load);
 
 
 //FRONTEND SCRIPT-----------------------------------------------------------------
@@ -200,6 +190,14 @@ function check(data, start, end) {
                 return false;
             }
         }
+        else{
+            if(data[i].end > start){
+                return false;
+            }
+            else{
+                return true;
+            }
+        }
 
     }
     return true;
@@ -226,7 +224,7 @@ function editModal(id, faculty_name, batch, date, start, end) {
     document.getElementById('update_schedule_start').value = start;
     document.getElementById('update_schedule_end').value = end;
 
-    document.getElementById('updateButton').onclick = () => editEvent(id);
+    document.getElementById('updateButton').onclick = () => editEvent(id,start,end);
 
     editEventModal.style.display = 'block';
     backDrop.style.display = 'block';
@@ -426,7 +424,7 @@ function deleteEvent(id, date) {
 
 }
 
-function editEvent(id) {
+function editEvent(id,start,end) {
     
     const schedule_facultyName = document.getElementById('update_schedule_facultyName');
     const schedule_batch = document.getElementById('update_schedule_batch');
@@ -440,7 +438,36 @@ function editEvent(id) {
         .split("T")[0];
 
     if (schedule_facultyName.value && schedule_batch.value && schedule_date && schedule_start.value && schedule_end.value) {
-        let validation = validate(schedule_facultyName.value, schedule_date, schedule_start.value + ":00", schedule_end.value + ":00");
+        if(start.localeCompare(schedule_start.value) == 0 && end.localeCompare(schedule_end.value) == 0){
+            fetch('http://localhost:5000/update', {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        id: id,
+                        schedule_facultyName: schedule_facultyName.value,
+                        schedule_date: schedule_date,
+                        schedule_batch: schedule_batch.value,
+                        schedule_end: schedule_end.value,
+                        schedule_start: schedule_start.value
+                    })
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            schedule_facultyName.value = "";
+                            schedule_batch.value = "";
+                            scheduleDate.value = "";
+                            schedule_start.value = "";
+                            schedule_end.value = "";
+
+                            closeModal();
+                        }
+                    });
+        }
+        else{
+            let validation = validate(schedule_facultyName.value, schedule_date, schedule_start.value + ":00", schedule_end.value + ":00");
         validation.then((bool) => {
             if (bool) {
                 fetch('http://localhost:5000/update', {
@@ -473,7 +500,9 @@ function editEvent(id) {
             else {
                 alert("This is an overlapping schedule !!! Please reconsider.")
             }
-        });
+            });
+        }
+        
 
     }
     else {

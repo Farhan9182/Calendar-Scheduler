@@ -154,10 +154,13 @@ body {
       margin-left: 5px;
   }
   
-  #saveButton, #closeButton {
+  #saveButton {
     background-color: #92a1d1;
     margin-left: auto;
     
+  }
+  #closeButton{
+    background-color: #92a1d1;
   }
   #addMoreButton, #updateButton {
       background-color: rgba(0,0,0,0.8);
