@@ -13,3 +13,5 @@ Features:
 
 Stack Used: HTML, CSS, JAVASCRIPT (Front-end)
 NodeJs, ExpressJs (Back-end) with MySQL (Database)
+
+Demo Video Link: https://www.linkedin.com/posts/farhan-khan-7796061b1_connections-javascript-nodejs-activity-6815006804393635840-icIS
