@@ -1,6 +1,6 @@
 body {
     display: flex;
-    margin-top: 50px;
+    margin-top: 90px;
     justify-content: center;
     background-color: whitesmoke;
     background-image: url("../Assets/background.png");
@@ -122,7 +122,7 @@ body {
     position: absolute;
     font-family: sans-serif;
   }
-  /* #newEventModal > input {
+  #newEventModal > input {
     padding: 10px;
     width: 100%;
     box-sizing: border-box;
@@ -131,7 +131,17 @@ body {
     outline: none;
     border: none;
     box-shadow: 0px 0px 3px gray;
-  } */
+  }
+  #updateEventModal > input {
+    padding: 10px;
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 25px;
+    border-radius: 3px;
+    outline: none;
+    border: none;
+    box-shadow: 0px 0px 3px gray;
+  }
   #eventTitleInput.error {
     border: 2px solid red;
   }

@@ -114,7 +114,7 @@ function populateEvents(eventRows, month, year, paddingDays, daysInMonth, day) {
                 let str2 = element.faculty_name.toLocaleUpperCase().trim();
                 var dateObj = new Date(element.date);
                 dateObj = dateObj.toLocaleDateString();
-                console.log("Hello");
+                
                 if (filter) {
                     if (dayString == dateObj && str1.localeCompare(str2) == 0 ){
                         
